@@ -36,10 +36,10 @@ function Login() {
         }
 
     
-        if (role === "organizer") {
+        if (user?.role === "organizer") {
           navigate("/dashboard", { replace: true });
         } else {
-          navigate("/home", { replace: true });
+          navigate("/", { replace: true });
         }
       } else {
         alert("Login failed: " + result.payload);

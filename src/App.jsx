@@ -71,7 +71,7 @@ const App = () => {
 
           <Routes>
             {/* PUBLIC */}
-            <Route index element={<Login />} />
+            <Route index element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
 
