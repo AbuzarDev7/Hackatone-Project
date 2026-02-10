@@ -19,8 +19,9 @@ import Organizer from "./pages/Organizer";
 import CreateEvent from "./pages/CreateEvent";
 import EventDetails from "./pages/EventDetails";
 import MyTickets from "./pages/MyTickets";
-import TicketQr from "./pages/Ticket";
+
 import NotFound from "./pages/NotFound";
+import Ticket from "./pages/Ticket";
 
 // Auth Persistence Component
 function AuthProvider({ children }) {
@@ -101,7 +102,7 @@ const App = () => {
             <Route
               path="/ticket/:ticketId"
               element={
-                <ProtectedRoutes role={["attendee"]} component={<TicketQr />} />
+                <ProtectedRoutes role={["attendee"]} component={<Ticket />} />
               }
             />
 
