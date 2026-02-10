@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { auth } from "../firebase/firebaseconfig/firebase";
 import { signOut } from "firebase/auth";
@@ -14,70 +14,82 @@ const Navbar = () => {
     dispatch(setUser(null));
   };
 
+  const linkClass =
+    "px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-white/10";
+
   return (
-    <nav className="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center">
-      <div className="text-xl font-bold">
-        <Link to="/">TicketApp</Link>
-      </div>
+    <nav className="sticky top-0 z-50 bg-gray-900 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-      <div className="space-x-4">
-        {!user && (
-          <>
-            <Link to="/login" className="hover:text-gray-200">
-              Login
-            </Link>
-            <Link to="/signup" className="hover:text-gray-200">
-              Sign Up
-            </Link>
-          </>
-        )}
+        {/* LOGO */}
+        <Link
+          to="/"
+          className="text-2xl font-bold tracking-wide text-emerald-400"
+        >
+          Qube<span className="text-white">Ticket</span>
+        </Link>
 
-        {user && user.role === "attendee" && (
-          <>
-            <Link to="/home" className="hover:text-gray-200">
-              Home
-            </Link>
-            <Link to="/events/123" className="hover:text-gray-200">
-              Events
-            </Link>
-            <Link to="/my-tickets" className="hover:text-gray-200">
-              My Tickets
-            </Link>
-            <Link to="/profile" className="hover:text-gray-200">
-              Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-            >
-             
-              Logout
-            </button>
-          </>
-        )}
+        {/* LINKS */}
+        <div className="flex items-center gap-2">
 
-        {user && user.role === "organizer" && (
-          <>
-            <Link to="/dashboard" className="hover:text-gray-200">
-              Dashboard
-            </Link>
-            <Link to="/create-event" className="hover:text-gray-200">
-              Create Event
-            </Link>
-            <Link to="/attendees/123" className="hover:text-gray-200">
-              Attendees
-            </Link>
-            <Link to="/validate-ticket" className="hover:text-gray-200">
-              Validate Ticket
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-            >
-              Logout
-            </button>
-          </>
-        )}
+          {/* GUEST */}
+          {!user && (
+            <>
+              <NavLink to="/login" className={linkClass}>
+                Login
+              </NavLink>
+              <NavLink
+                to="/signup"
+                className="px-4 py-2 rounded-lg text-sm font-semibold
+                           bg-emerald-600 hover:bg-emerald-700 transition"
+              >
+                Sign Up
+              </NavLink>
+            </>
+          )}
+
+          {/* ATTENDEE */}
+          {user && user.role === "attendee" && (
+            <>
+              <NavLink to="/home" className={linkClass}>
+                Home
+              </NavLink>
+
+              <NavLink to="/my-tickets" className={linkClass}>
+                My Tickets
+              </NavLink>
+
+              <button
+                onClick={handleLogout}
+                className="ml-2 px-4 py-2 rounded-lg text-sm font-semibold
+                           bg-red-500 hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </>
+          )}
+
+          {/* ORGANIZER */}
+          {user && user.role === "organizer" && (
+            <>
+              <NavLink to="/dashboard" className={linkClass}>
+                Dashboard
+              </NavLink>
+
+              <NavLink to="/create-event" className={linkClass}>
+                Create Event
+              </NavLink>
+
+              <button
+                onClick={handleLogout}
+                className="ml-2 px-4 py-2 rounded-lg text-sm font-semibold
+                           bg-red-500 hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );
