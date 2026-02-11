@@ -71,7 +71,7 @@ const NotFound = () => {
         />
       </div>
 
-      {/* Content */}
+      
       <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10">
         <h1 className="mb-2 text-7xl md:text-9xl font-bold text-white">404</h1>
         <p className="mb-8 text-xl md:text-2xl text-gray-300">

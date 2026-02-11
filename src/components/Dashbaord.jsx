@@ -96,7 +96,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
-      {/* Header */}
+
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
           Organizer Dashboard
