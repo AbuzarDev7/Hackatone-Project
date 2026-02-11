@@ -79,7 +79,10 @@ const Navbar = () => {
               <NavLink to="/create-event" className={linkClass}>
                 Create Event
               </NavLink>
-
+                <NavLink to="/scan-qr" className={linkClass}>
+                Scan Qr
+              </NavLink>
+       
               <button
                 onClick={handleLogout}
                 className="ml-2 px-4 py-2 rounded-lg text-sm font-semibold

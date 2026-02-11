@@ -6,16 +6,18 @@ import { db } from "../firebase/firebaseconfig/firebase";
 function CreateEvent() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [totalTickets, setTotalTickets] = useState("");
+  const [price, setPrice] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !startDate || !endDate || !totalTickets) {
+    if (!name || !location || !startDate || !endDate || !totalTickets || !price) {
       alert("Please fill all required fields!");
       return;
     }
@@ -24,9 +26,11 @@ function CreateEvent() {
     try {
       await addDoc(collection(db, "events"), {
         name,
+        location,
         startDate,
         endDate,
         totalTickets: Number(totalTickets),
+        price: Number(price),
         sold: 0,
         imageUrl: imageUrl || "",
         createdAt: new Date().toISOString(),
@@ -55,7 +59,9 @@ function CreateEvent() {
             Add event details, set dates, manage tickets, and start selling. Everything you need in one simple dashboard.
           </p>
           <ul className="mt-6 space-y-2 text-gray-300 text-sm">
+            <li>✔ Set event location</li>
             <li>✔ Set start & end dates</li>
+            <li>✔ Set ticket price</li>
             <li>✔ Manage ticket limits</li>
             <li>✔ Upload event image</li>
             <li>✔ Track sales in dashboard</li>
@@ -76,6 +82,20 @@ function CreateEvent() {
                 placeholder="Enter event name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="mt-2 w-full border border-gray-300 px-4 py-3 rounded-xl text-sm
+                           focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Location</label>
+              <input
+                type="text"
+                placeholder="Enter event location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 className="mt-2 w-full border border-gray-300 px-4 py-3 rounded-xl text-sm
                            focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
@@ -109,18 +129,33 @@ function CreateEvent() {
               </div>
             </div>
 
-            {/* Total Tickets */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Total Tickets</label>
-              <input
-                type="number"
-                placeholder="Enter total tickets"
-                value={totalTickets}
-                onChange={(e) => setTotalTickets(e.target.value)}
-                className="mt-2 w-full border border-gray-300 px-4 py-3 rounded-xl text-sm
-                           focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                required
-              />
+            {/* Total Tickets and Price */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Total Tickets</label>
+                <input
+                  type="number"
+                  placeholder="Enter total tickets"
+                  value={totalTickets}
+                  onChange={(e) => setTotalTickets(e.target.value)}
+                  className="mt-2 w-full border border-gray-300 px-4 py-3 rounded-xl text-sm
+                             focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Price (PKR)</label>
+                <input
+                  type="number"
+                  placeholder="Enter ticket price"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="mt-2 w-full border border-gray-300 px-4 py-3 rounded-xl text-sm
+                             focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
             </div>
 
             {/* Image URL */}
@@ -136,7 +171,7 @@ function CreateEvent() {
               />
             </div>
 
-            {/* Submit Button (Login-style Emerald) */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}

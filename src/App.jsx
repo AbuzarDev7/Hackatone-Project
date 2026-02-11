@@ -19,6 +19,7 @@ import EventDetails from "./pages/EventDetails";
 import MyTickets from "./pages/MyTickets";
 import NotFound from "./pages/NotFound";
 import Ticket from "./pages/Ticket";
+import ScanTicket from "./pages/ScanTikcet";
 
 // Auth Persistence Component
 function AuthProvider({ children }) {
@@ -113,6 +114,15 @@ const App = () => {
                     <ProtectedRoutes
                       role={["organizer"]}
                       component={<CreateEvent />}
+                    />
+                  }
+                />
+                 <Route
+                  path="/scan-qr"
+                  element={
+                    <ProtectedRoutes
+                      role={["organizer"]}
+                      component={<ScanTicket />}
                     />
                   }
                 />
