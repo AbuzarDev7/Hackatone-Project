@@ -9,6 +9,7 @@ import {
   getDocs,
   query,
   where,
+  increment,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseconfig/firebase";
 import { useSelector } from "react-redux";
@@ -22,13 +23,19 @@ function EventDetails() {
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
 
+  // 🔹 Fetch Event
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const eventRef = doc(db, "events", id);
         const eventSnap = await getDoc(eventRef);
+
         if (eventSnap.exists()) {
-          setEvent({ id: eventSnap.id, ...eventSnap.data() });
+          setEvent({
+            id: eventSnap.id,
+            sold: 0,
+            ...eventSnap.data(),
+          });
         }
       } catch (error) {
         console.error("Error fetching event:", error);
@@ -36,17 +43,22 @@ function EventDetails() {
         setLoading(false);
       }
     };
+
     fetchEvent();
   }, [id]);
 
+  // 🔹 Handle Booking
   const handleBookTicket = async () => {
     if (!user) {
       navigate("/login");
       return;
     }
 
-    if (event.sold >= event.totalTickets) {
-      alert("Sorry, tickets are sold out!");
+    if (!event) return;
+
+    //  Sold Out Check
+    if ((event.sold || 0) >= event.totalTickets) {
+      alert(" Tickets are sold out!");
       return;
     }
 
@@ -54,47 +66,71 @@ function EventDetails() {
       setBooking(true);
 
       const ticketsRef = collection(db, "tickets");
+
+      // 🔥 Check user already booked how many tickets
       const q = query(
         ticketsRef,
-        where("email", "==", user.email.trim().toLowerCase()),
+        where("email", "==", user.email.toLowerCase()),
         where("eventId", "==", event.id)
       );
+
       const snapshot = await getDocs(q);
 
-      if (snapshot.docs.length >= 2) {
-        alert("You can book a maximum of 2 tickets for this event!");
+      if (snapshot.size >= 2) {
+        alert("⚠ You can book maximum 2 tickets only!");
         setBooking(false);
         return;
       }
 
+     
+      const ticketId = `TICKET-${Date.now()}`;
+
+      //  Add Ticket
       await addDoc(ticketsRef, {
+        ticketId,
         eventId: event.id,
         eventName: event.name,
-        eventDate: event.date,
-        email: user.email.trim().toLowerCase(),
-        status: "Booked",
-        createdAt: new Date().toISOString(),
+        email: user.email.toLowerCase(),
+        status: "valid",
+        createdAt: new Date(),
       });
 
-      const eventRef = doc(db, "events", event.id);
-      await updateDoc(eventRef, { sold: event.sold + 1 });
 
-      alert("🎉 Ticket booked successfully!");
-      setEvent((prev) => ({ ...prev, sold: prev.sold + 1 }));
-    } catch (err) {
-      console.error("Booking failed:", err);
-      alert("Booking failed");
+      const eventRef = doc(db, "events", event.id);
+      await updateDoc(eventRef, {
+        sold: increment(1),
+      });
+
+
+      setEvent((prev) => ({
+        ...prev,
+        sold: (prev.sold || 0) + 1,
+      }));
+
+      alert("🎉 Ticket Booked Successfully!");
+    } catch (error) {
+      console.error("Booking error:", error);
+      alert("Booking failed!");
     } finally {
       setBooking(false);
     }
   };
 
   if (loading)
-    return <p className="text-center mt-10 text-gray-500 text-lg">Loading event...</p>;
-  if (!event)
-    return <p className="text-center mt-10 text-gray-500 text-lg">Event not found</p>;
+    return (
+      <p className="text-center mt-10 text-gray-500 text-lg">
+        Loading event...
+      </p>
+    );
 
-  const ticketsLeft = event.totalTickets - event.sold;
+  if (!event)
+    return (
+      <p className="text-center mt-10 text-gray-500 text-lg">
+        Event not found
+      </p>
+    );
+
+  const ticketsLeft = event.totalTickets - (event.sold || 0);
 
   return (
     <div className="max-w-4xl mx-auto p-6 md:p-10 bg-gray-50 rounded-3xl shadow-lg">
@@ -105,22 +141,27 @@ function EventDetails() {
       />
 
       <div className="mt-6 md:mt-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800">{event.name}</h1>
-        <p className="text-gray-500 mt-2 md:mt-3 text-sm md:text-base">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+          {event.name}
+        </h1>
+
+        <p className="text-gray-500 mt-3">
           Date: {event.startDate} - {event.endDate}
         </p>
 
-        <div className="mt-4 flex flex-col md:flex-row md:items-center md:gap-6 text-gray-700">
-          <p className="text-sm md:text-base">
-            Total Tickets: <span className="font-semibold">{event.totalTickets}</span>
+        <div className="mt-4 flex gap-6 text-gray-700">
+          <p>
+            Total Tickets:{" "}
+            <span className="font-semibold">{event.totalTickets}</span>
           </p>
-          <p className="text-sm md:text-base">
+
+          <p>
             Tickets Left:{" "}
             <span
               className={
-                ticketsLeft === 0
+                ticketsLeft <= 0
                   ? "text-red-500 font-semibold"
-                  : "text-emerald-600 font-semibold"
+                  : "text-green-600 font-semibold"
               }
             >
               {ticketsLeft}
@@ -130,12 +171,18 @@ function EventDetails() {
 
         <button
           onClick={handleBookTicket}
-          disabled={booking || ticketsLeft === 0}
-          className={`mt-6 w-full md:w-1/3 text-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition shadow-lg active:scale-95 ${
-            booking || ticketsLeft === 0 ? "opacity-60 cursor-not-allowed" : ""
+          disabled={booking || ticketsLeft <= 0}
+          className={`mt-6 w-full md:w-1/3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition ${
+            booking || ticketsLeft <= 0
+              ? "opacity-60 cursor-not-allowed"
+              : ""
           }`}
-        >  
-          {ticketsLeft === 0 ? "Sold Out" : booking ? "Booking..." : "Book Ticket"}
+        >
+          {ticketsLeft <= 0
+            ? "Sold Out"
+            : booking
+            ? "Booking..."
+            : "Book Ticket"}
         </button>
       </div>
     </div>

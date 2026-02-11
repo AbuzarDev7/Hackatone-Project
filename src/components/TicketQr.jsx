@@ -25,7 +25,7 @@ function TicketQr() {
       (ticketSnap) => {
         if (ticketSnap.exists()) {
           const ticketData = { id: ticketSnap.id, ...ticketSnap.data() };
-          console.log("✅ Ticket updated:", ticketData); // Debug log
+          console.log(" Ticket updated:", ticketData); // Debug log
           setTicket(ticketData);
           setError(null);
         } else {
@@ -35,14 +35,14 @@ function TicketQr() {
         setLoading(false);
       },
       (err) => {
-        console.error("❌ Firebase error:", err);
+        console.error(" Firebase error:", err);
         setError("Failed to load ticket");
         setLoading(false);
       }
     );
 
     return () => {
-      console.log("🔌 Unsubscribing from ticket updates");
+      console.log(" Unsubscribing from ticket updates");
       unsubscribe();
     };
   }, [ticketId]);
@@ -86,7 +86,7 @@ function TicketQr() {
             ? "bg-gradient-to-r from-green-500 to-green-600" 
             : "bg-gradient-to-r from-emerald-500 to-emerald-600"
         }`}>
-          {ticket.status === "checked" ? "✅ CHECKED IN" : "🎫 BOOKED"}
+          {ticket.status === "checked" ? " CHECKED IN" : " BOOKED"}
         </div>
 
         {/* Ticket Details */}
@@ -95,7 +95,7 @@ function TicketQr() {
             {ticket.eventName}
           </h1>
           <p className="text-gray-600 text-lg mb-4">
-            📅 {ticket.eventDate}
+             {ticket.eventDate}
           </p>
 
           {/* QR Code */}
@@ -115,7 +115,7 @@ function TicketQr() {
               <p className={`text-lg font-bold transition-colors duration-300 ${
                 ticket.status === "checked" ? "text-green-600" : "text-emerald-600"
               }`}>
-                {ticket.status === "checked" ? "✓ Checked In" : "⏳ Pending Check-in"}
+                {ticket.status === "checked" ? "✓ Checked In" : " Pending Check-in"}
               </p>
             </div>
 
@@ -147,8 +147,8 @@ function TicketQr() {
               ticket.status === "checked" ? "text-green-700" : "text-emerald-700"
             }`}>
               {ticket.status === "checked" 
-                ? "🎉 You're all set! Enjoy the event." 
-                : "📱 Show this QR code at the entrance for check-in."}
+                ? " You're all set! Enjoy the event." 
+                : "Show this QR code at the entrance for check-in."}
             </p>
           </div>
         </div>
