@@ -6,11 +6,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase/firebaseconfig/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { setUser } from "./redux/reducers/authSlice";
-
-
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import ProtectedRoutes from "./components/ProtectedRoute";
-
 // Pages
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -19,14 +17,12 @@ import Organizer from "./pages/Organizer";
 import CreateEvent from "./pages/CreateEvent";
 import EventDetails from "./pages/EventDetails";
 import MyTickets from "./pages/MyTickets";
-
 import NotFound from "./pages/NotFound";
 import Ticket from "./pages/Ticket";
 
 // Auth Persistence Component
 function AuthProvider({ children }) {
   const dispatch = useDispatch();
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
@@ -53,10 +49,8 @@ function AuthProvider({ children }) {
         dispatch(setUser(null));
       }
     });
-
     return () => unsubscribe();
   }, [dispatch]);
-
   return children;
 }
 
@@ -65,70 +59,69 @@ const App = () => {
     <Provider store={store}>
       <BrowserRouter>
         <AuthProvider>
-     
-          <Navbar />
-
-          <Routes>
-
-            <Route index element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-
-            {/* ATTENDEE */}
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoutes role={["attendee"]} component={<Home />} />
-              }
-            />
-            <Route
-              path="/events/:id"
-              element={
-                <ProtectedRoutes
-                  role={["attendee"]}
-                  component={<EventDetails />}
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">
+              <Routes>
+                <Route index element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                {/* ATTENDEE */}
+                <Route
+                  path="/home"
+                  element={
+                    <ProtectedRoutes role={["attendee"]} component={<Home />} />
+                  }
                 />
-              }
-            />
-            <Route
-              path="/my-tickets"
-              element={
-                <ProtectedRoutes
-                  role={["attendee"]}
-                  component={<MyTickets />}
+                <Route
+                  path="/events/:id"
+                  element={
+                    <ProtectedRoutes
+                      role={["attendee"]}
+                      component={<EventDetails />}
+                    />
+                  }
                 />
-              }
-            />
-            <Route
-              path="/ticket/:ticketId"
-              element={
-                <ProtectedRoutes role={["attendee"]} component={<Ticket />} />
-              }
-            />
-
-            {/* ORGANIZER */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoutes
-                  role={["organizer"]}
-                  component={<Organizer />} 
+                <Route
+                  path="/my-tickets"
+                  element={
+                    <ProtectedRoutes
+                      role={["attendee"]}
+                      component={<MyTickets />}
+                    />
+                  }
                 />
-              }
-            />
-            <Route
-              path="/create-event"
-              element={
-                <ProtectedRoutes
-                  role={["organizer"]}
-                  component={<CreateEvent />}
+                <Route
+                  path="/ticket/:ticketId"
+                  element={
+                    <ProtectedRoutes role={["attendee"]} component={<Ticket />} />
+                  }
                 />
-              }
-            />
-
-  
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+                {/* ORGANIZER */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoutes
+                      role={["organizer"]}
+                      component={<Organizer />} 
+                    />
+                  }
+                />
+                <Route
+                  path="/create-event"
+                  element={
+                    <ProtectedRoutes
+                      role={["organizer"]}
+                      component={<CreateEvent />}
+                    />
+                  }
+                />
+      
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
         </AuthProvider>
       </BrowserRouter>
     </Provider>

@@ -1,1 +1,37 @@
 @import "tailwindcss";
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes tilt {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes fallTopLeft {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(-100px, 100vh); opacity: 0; }
+}
+
+@keyframes fallTopRight {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(100px, 100vh); opacity: 0; }
+}
+
+.animate-float-tilt {
+  animation: float 6s ease-in-out infinite, tilt 6s ease-in-out infinite;
+}
+
+.animate-fall-topLeft {
+  animation: fallTopLeft 5s linear infinite;
+}
+
+.animate-fall-topRight {
+  animation: fallTopRight 5s linear infinite;
+}
