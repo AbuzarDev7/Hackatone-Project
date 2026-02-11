@@ -23,7 +23,7 @@ function Dashboard() {
   const [showValidate, setShowValidate] = useState(false);
   const [search, setSearch] = useState("");
 
-  // ✅ Fetch Organizer Name
+  //  Fetch Organizer Name
   useEffect(() => {
     if (!user?.uid) return;
 
@@ -40,7 +40,7 @@ function Dashboard() {
     fetchOrganizerName();
   }, [user]);
 
-  // ✅ Fetch Events
+  //  Fetch Events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -61,7 +61,7 @@ function Dashboard() {
     fetchEvents();
   }, []);
 
-  // ✅ Fetch Attendees (Tickets Collection - Second Dashboard Logic)
+
   const fetchAttendees = async (event, validate = false) => {
     setSelectedEvent(event);
     setShowValidate(validate);
@@ -88,7 +88,7 @@ function Dashboard() {
     }
   };
 
-  // ✅ Validate Ticket
+  // Validate Ticket
   const handleValidate = async (ticket) => {
     try {
       const ticketRef = doc(db, "tickets", ticket.id);
