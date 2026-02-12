@@ -23,7 +23,7 @@ function Dashboard() {
   const [showValidate, setShowValidate] = useState(false);
   const [search, setSearch] = useState("");
 
-  //  Fetch Organizer Name
+  // Fetch Organizer Name
   useEffect(() => {
     if (!user?.uid) return;
 
@@ -40,7 +40,7 @@ function Dashboard() {
     fetchOrganizerName();
   }, [user]);
 
-  //  Fetch Events
+  // Fetch Events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -61,7 +61,7 @@ function Dashboard() {
     fetchEvents();
   }, []);
 
-
+  // Fetch Attendees
   const fetchAttendees = async (event, validate = false) => {
     setSelectedEvent(event);
     setShowValidate(validate);
@@ -120,7 +120,6 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
-
       {/* Header */}
       <div className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
@@ -134,61 +133,50 @@ function Dashboard() {
         </p>
       </div>
 
-      {/* Stats Cards (Old UI Style) */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <p className="text-sm text-gray-500 font-semibold">Total Events</p>
-          <p className="text-3xl font-bold text-gray-800 mt-2">
-            {events.length}
-          </p>
+          <p className="text-3xl font-bold text-gray-800 mt-2">{events.length}</p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <p className="text-sm text-gray-500 font-semibold">
-            Tickets Sold
-          </p>
+          <p className="text-sm text-gray-500 font-semibold">Tickets Sold</p>
           <p className="text-3xl font-bold text-gray-800 mt-2">
             {events.reduce((sum, e) => sum + (e.sold || 0), 0)}
           </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <p className="text-sm text-gray-500 font-semibold">
-            Sold Out Events
-          </p>
+          <p className="text-sm text-gray-500 font-semibold">Sold Out Events</p>
           <p className="text-3xl font-bold text-gray-800 mt-2">
             {events.filter((e) => e.sold >= e.totalTickets).length}
           </p>
         </div>
       </div>
 
-      {/* Event Cards (Old UI Style) */}
-      <h2 className="text-2xl md:text-3xl font-semibold mb-6">
-        Events
-      </h2>
-
+      {/* Events List */}
+      <h2 className="text-2xl md:text-3xl font-semibold mb-6">Events</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {events.map((event) => (
-          <div
-            key={event.id}
-            className="bg-white rounded-3xl shadow-2xl overflow-hidden"
-          >
+          <div key={event.id} className="bg-white rounded-3xl shadow-2xl overflow-hidden">
             {event.imageUrl ? (
-              <img
-                src={event.imageUrl}
-                alt={event.name}
-                className="h-52 w-full object-cover"
-              />
+              <img src={event.imageUrl} alt={event.name} className="h-52 w-full object-cover" />
             ) : (
               <div className="h-52 w-full bg-gray-200 flex items-center justify-center text-gray-400">
                 No Image
               </div>
             )}
-
             <div className="p-5">
-              <h3 className="text-xl font-bold text-gray-800">
-                {event.name}
-              </h3>
+              <h3 className="text-xl font-bold text-gray-800">{event.name}</h3>
+              <div className="mt-2 text-gray-600 text-sm space-y-1">
+                <p><strong>Location:</strong> {event.location || "N/A"}</p>
+                <p><strong>Price:</strong> PKR {event.price?.toLocaleString() || "N/A"}</p>
+                <p><strong>Total Tickets:</strong> {event.totalTickets}</p>
+                <p><strong>Tickets Sold:</strong> {event.sold}</p>
+                <p><strong>Start:</strong> {event.startDate}</p>
+                <p><strong>End:</strong> {event.endDate}</p>
+              </div>
 
               <div className="mt-4 flex gap-2 flex-wrap">
                 <button
@@ -197,7 +185,6 @@ function Dashboard() {
                 >
                   View Attendees
                 </button>
-
                 <button
                   onClick={() => fetchAttendees(event, true)}
                   className="flex-1 bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition"
@@ -210,10 +197,10 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* Attendees Section */}
+      {/* Attendees Cards Section */}
       {selectedEvent && (
-        <div className="mt-12 bg-gray-50 p-6 rounded-3xl shadow-2xl">
-          <h2 className="text-2xl font-bold mb-4">
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6">
             {showValidate ? "Validate Tickets" : "Attendees"} — {selectedEvent.name}
           </h2>
 
@@ -223,53 +210,50 @@ function Dashboard() {
               placeholder="Search by name or email"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="border p-3 rounded-xl w-full max-w-sm mb-4"
+              className="border p-3 rounded-xl w-full max-w-sm mb-6"
             />
           )}
 
           {attendeeLoading ? (
             <p>Loading attendees...</p>
+          ) : filteredAttendees.length === 0 ? (
+            <p className="text-gray-500">No attendees found.</p>
           ) : (
-            <div className="overflow-x-auto bg-white rounded-2xl">
-              <table className="w-full table-auto">
-                <thead className="bg-green-100">
-                  <tr>
-                    <th className="p-3 text-left">Name</th>
-                    <th className="p-3 text-left">Email</th>
-                    <th className="p-3 text-left">Ticket ID</th>
-                    <th className="p-3 text-left">Status</th>
-                    {showValidate && <th className="p-3">Action</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAttendees.map((att) => (
-                    <tr key={att.id} className="border-b hover:bg-green-50">
-                      <td className="p-3">{att.name}</td>
-                      <td className="p-3">{att.email}</td>
-                      <td className="p-3">{att.id}</td>
-                      <td className="p-3">
-                        {att.status || "Booked"}
-                      </td>
-                      {showValidate && (
-                        <td className="p-3">
-                          {att.status !== "Used" ? (
-                            <button
-                              onClick={() => handleValidate(att)}
-                              className="bg-blue-500 text-white px-3 py-1 rounded-xl"
-                            >
-                              Validate
-                            </button>
-                          ) : (
-                            <span className="text-green-600 font-semibold">
-                              Validated
-                            </span>
-                          )}
-                        </td>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAttendees.map((att) => (
+                <div
+                  key={att.id}
+                  className="bg-white p-5 rounded-2xl shadow-lg flex flex-col justify-between hover:shadow-2xl transition"
+                >
+                  <div>
+                  
+                    <p className="text-gray-500 text-sm">{att.email || "N/A"}</p>
+                    <p className="mt-2 text-gray-700 text-sm">
+                      <strong>Ticket ID:</strong> {att.id}
+                    </p>
+                    <p className={`mt-1 font-semibold ${
+                      att.status === "Used" ? "text-green-600" : "text-blue-600"
+                    }`}>
+                      {att.status || "Booked"}
+                    </p>
+                  </div>
+
+                  {showValidate && (
+                    <div className="mt-4">
+                      {att.status !== "Used" ? (
+                        <button
+                          onClick={() => handleValidate(att)}
+                          className="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600 transition"
+                        >
+                          Validate
+                        </button>
+                      ) : (
+                        <span className="text-green-600 font-semibold">Validated</span>
                       )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>

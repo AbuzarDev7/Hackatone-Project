@@ -33,7 +33,6 @@ function EventDetails() {
         if (eventSnap.exists()) {
           setEvent({
             id: eventSnap.id,
-            sold: 0,
             ...eventSnap.data(),
           });
         }
@@ -56,9 +55,9 @@ function EventDetails() {
 
     if (!event) return;
 
-    //  Sold Out Check
-    if ((event.sold || 0) >= event.totalTickets) {
-      alert(" Tickets are sold out!");
+    const ticketsLeft = event.totalTickets - (event.sold || 0);
+    if (ticketsLeft <= 0) {
+      alert("Tickets are sold out!");
       return;
     }
 
@@ -67,7 +66,7 @@ function EventDetails() {
 
       const ticketsRef = collection(db, "tickets");
 
-      // 🔥 Check user already booked how many tickets
+      // 🔥 Check if user already booked 2 tickets
       const q = query(
         ticketsRef,
         where("email", "==", user.email.toLowerCase()),
@@ -82,7 +81,6 @@ function EventDetails() {
         return;
       }
 
-     
       const ticketId = `TICKET-${Date.now()}`;
 
       //  Add Ticket
@@ -95,12 +93,11 @@ function EventDetails() {
         createdAt: new Date(),
       });
 
-
+      // Update sold count
       const eventRef = doc(db, "events", event.id);
       await updateDoc(eventRef, {
         sold: increment(1),
       });
-
 
       setEvent((prev) => ({
         ...prev,
@@ -134,29 +131,44 @@ function EventDetails() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 md:p-10 bg-gray-50 rounded-3xl shadow-lg">
+      {/* Event Image */}
       <img
-        src={event.imageUrl}
+        src={event.imageUrl || "/placeholder.jpg"}
         alt={event.name}
         className="w-full h-72 md:h-96 object-cover rounded-3xl shadow-md"
       />
 
-      <div className="mt-6 md:mt-8">
+      <div className="mt-6 md:mt-8 space-y-4">
+        {/* Event Name */}
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
           {event.name}
         </h1>
 
-        <p className="text-gray-500 mt-3">
-          Date: {event.startDate} - {event.endDate}
+        {/* Location & Price */}
+        <div className="flex flex-col md:flex-row gap-6 text-gray-700">
+          <p>
+            <strong>Location:</strong> {event.location || "N/A"}
+          </p>
+          <p>
+            <strong>Price:</strong> PKR {event.price?.toLocaleString() || "N/A"}
+          </p>
+        </div>
+
+        {/* Dates */}
+        <p className="text-gray-600">
+          <strong>Date:</strong> {event.startDate} - {event.endDate}
         </p>
 
-        <div className="mt-4 flex gap-6 text-gray-700">
+        {/* Tickets Info */}
+        <div className="flex gap-6 text-gray-700">
           <p>
-            Total Tickets:{" "}
-            <span className="font-semibold">{event.totalTickets}</span>
+            <strong>Total Tickets:</strong> {event.totalTickets}
           </p>
-
           <p>
-            Tickets Left:{" "}
+            <strong>Tickets Sold:</strong> {event.sold || 0}
+          </p>
+          <p>
+            <strong>Tickets Left:</strong>{" "}
             <span
               className={
                 ticketsLeft <= 0
@@ -169,6 +181,7 @@ function EventDetails() {
           </p>
         </div>
 
+        {/* Book Ticket Button */}
         <button
           onClick={handleBookTicket}
           disabled={booking || ticketsLeft <= 0}

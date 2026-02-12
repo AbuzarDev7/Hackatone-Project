@@ -3,6 +3,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebaseconfig/firebase";
 import { Link } from "react-router-dom";
 
+
+
 function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,11 @@ function Home() {
   }
 
   return (
-    <div className="p-6 md:p-10">
+    
+<div>
+  
+      <div className="p-6 md:p-10">
+     
       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800">Upcoming Events</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -82,6 +88,7 @@ function Home() {
         })}
       </div>
     </div>
+</div>
   );
 }
 

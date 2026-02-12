@@ -65,7 +65,7 @@ function CreateEvent() {
       alert(" Event created successfully!");
       
       // Navigate to events list
-      navigate("/events");
+      navigate("/dashboard");
       
     } catch (err) {
       console.error(" Error creating event:", err);
