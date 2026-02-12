@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import { store } from "./redux/store/store";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "./firebase/firebaseconfig/firebase";
+import { auth, db } from "./firebase/firebaseConfig/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { setUser } from "./redux/reducers/authSlice";
 import Navbar from "./components/Navbar";
