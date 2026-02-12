@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 
 
+
 function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +38,7 @@ function Home() {
   return (
     
 <div>
-  
+
       <div className="p-6 md:p-10">
      
       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800">Upcoming Events</h1>

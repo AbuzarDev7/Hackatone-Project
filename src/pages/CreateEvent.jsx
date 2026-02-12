@@ -61,10 +61,10 @@ function CreateEvent() {
       
       console.log(" Event created successfully:", docRef.id);
       
-      // Show success message
+ 
       alert(" Event created successfully!");
       
-      // Navigate to events list
+    
       navigate("/dashboard");
       
     } catch (err) {

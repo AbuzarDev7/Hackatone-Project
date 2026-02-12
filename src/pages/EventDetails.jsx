@@ -66,7 +66,7 @@ function EventDetails() {
 
       const ticketsRef = collection(db, "tickets");
 
-      // 🔥 Check if user already booked 2 tickets
+      //  Check if user already booked 2 tickets
       const q = query(
         ticketsRef,
         where("email", "==", user.email.toLowerCase()),
@@ -76,7 +76,7 @@ function EventDetails() {
       const snapshot = await getDocs(q);
 
       if (snapshot.size >= 2) {
-        alert("⚠ You can book maximum 2 tickets only!");
+        alert(" You can book maximum 2 tickets only!");
         setBooking(false);
         return;
       }
@@ -104,7 +104,7 @@ function EventDetails() {
         sold: (prev.sold || 0) + 1,
       }));
 
-      alert("🎉 Ticket Booked Successfully!");
+      alert("Ticket Booked Successfully!");
     } catch (error) {
       console.error("Booking error:", error);
       alert("Booking failed!");
