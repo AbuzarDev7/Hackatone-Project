@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebaseconfig/firebase";
+import { db } from "../firebase/firebaseConfig/firebase";
 
 function ScanTicket() {
   const [scanning, setScanning] = useState(false);

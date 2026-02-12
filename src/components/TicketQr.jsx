@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, onSnapshot } from "firebase/firestore";
 import QRCode from "react-qr-code"; 
-import { db } from "../firebase/firebaseconfig/firebase";
+import { db } from "../firebase/firebaseConfig/firebase";
 
 function TicketQr() {
   const { ticketId } = useParams();

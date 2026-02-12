@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase/firebaseconfig/firebase";
+import { db } from "../firebase/firebaseConfig/firebase";
 import { Link } from "react-router-dom";
 
 function Home() {

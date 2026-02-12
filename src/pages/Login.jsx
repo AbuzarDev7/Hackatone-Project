@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { signInUser } from "../redux/reducers/authSlice";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase/firebaseconfig/firebase";
+import { db } from "../firebase/firebaseConfig/firebase";
 
 function Login() {
   const [email, setEmail] = useState("");
