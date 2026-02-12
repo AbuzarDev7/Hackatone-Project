@@ -11,7 +11,7 @@ import {
   where,
   increment,
 } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig/firebase";
+import { db } from "../firebase/firebaseconfig/firebase";
 import { useSelector } from "react-redux";
 
 function EventDetails() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig/firebase";
+import { db } from "../firebase/firebaseconfig/firebase";
 import { Link } from "react-router-dom";
 
 function MyTickets() {

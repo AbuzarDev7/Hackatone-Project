@@ -9,7 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig/firebase";
+import { db } from "../firebase/firebaseconfig/firebase";
 
 function Dashboard() {
   const user = useSelector((state) => state.auth.user);

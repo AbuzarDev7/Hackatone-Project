@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { auth } from "../firebase/firebaseConfig/firebase";
+import { auth } from "../firebase/firebaseconfig/firebase";
 import { signOut } from "firebase/auth";
 import { setUser } from "../redux/reducers/authSlice";
 
